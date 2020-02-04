@@ -1,12 +1,19 @@
-FROM node:10.15.3-alpine
+# Import base image
+FROM node:12.0-slim
 
+# Set up a working dir for the app 
 WORKDIR /app
+# Copy over the package json
+COPY package.json .
+
+# Install typescript and app deps
+RUN npm install typescript -g 
+RUN npm install
+
+# Add remaining app files 
 ADD . .
+# Build typescript 
+RUN npm run build
 
-RUN npm ci
-
-USER node
-
-EXPOSE 3000
-
-CMD [ "node", "dist/app.js" ]
+# Start app in prod 
+CMD [ "npm", "start" ]
