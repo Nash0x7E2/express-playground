@@ -8,12 +8,11 @@ COPY package.json .
 
 # Install typescript and app deps
 RUN npm install typescript -g 
+RUN npm install nodemon -g
 RUN npm install
 
 # Add remaining app files 
 ADD . .
-# Build typescript 
-RUN npm run build
 
-# Start app in prod 
-CMD [ "npm", "start" ]
+# Start app in dev
+CMD [ "nodemon", "src/app.ts" ]
