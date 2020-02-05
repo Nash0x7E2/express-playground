@@ -8,4 +8,13 @@ export class ItemsController {
             `
         );
     }
+
+    public createItem(req: Request, res: Response) {
+        console.log(`hello`);
+        return res.status(200).send(
+            `
+                <h3> Welcome to /items endpoint (POST) </h3>
+            `
+        );
+    }
 }
