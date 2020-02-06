@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 import {con} from "../database_config";
-import {ConnectionPool} from "mssql";
+import {ConnectionPool, Request as MSRequest, VarChar} from "mssql";
 
 export class ItemsController {
     public async getItems(req: Request, res: Response) {
@@ -23,10 +23,25 @@ export class ItemsController {
     }
 
     public async createItem(req: Request, res: Response) {
-        return res.status(200).send(
+        let data = req.body;
+        try {
+            let connection: ConnectionPool = await con.connect();
+            let request: MSRequest = new MSRequest(connection);
+            return request.input(`item`, VarChar, data.item).query("INSERT INTO listing.[default].items (item_name) VALUES (@item)",
+                function (err, results) {
+                    connection.close();
+                    if (err == null) {
+                        return res.status(200).send(`Added item "${data.item}". Call with get request to view`);
+                    } else {
+                        return res.status(500).send(`Error adding item ${err}`);
+                    }
+                });
+        } catch (error) {
+            return res.status(500).send(
+                `
+                <h3> Error ${error} </h3>
             `
-                <h3> Welcome to /items endpoint </h3>
-            `
-        );
+            );
+        }
     }
 }
