@@ -2,15 +2,10 @@ import express, {Application} from 'express';
 import {applicationRouter} from "./route/application_router";
 import {itemsRouter} from "./route/items_router";
 
-const cors = require("cors");
-
 let app: Application = express();
 
 // Set up middleware json parsing
 app.use(express.json());
-
-// Allow Cors
-app.use(cors);
 
 // Set up routing for application
 app.use('/', applicationRouter);
