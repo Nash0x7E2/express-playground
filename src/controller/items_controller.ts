@@ -1,6 +1,6 @@
-import {Request, Response} from "express";
-import {con} from "../database_config";
-import {ConnectionPool, Request as MSRequest, VarChar} from "mssql";
+import { Request, Response } from "express";
+import { con } from "../database_config";
+import { ConnectionPool, Request as MSRequest, VarChar } from "mssql";
 
 export class ItemsController {
     public async getItems(req: Request, res: Response) {
@@ -24,11 +24,12 @@ export class ItemsController {
 
     public async createItem(req: Request, res: Response) {
         let data = req.body;
+        console.log(data);
         try {
             let connection: ConnectionPool = await con.connect();
             let request: MSRequest = new MSRequest(connection);
             return request.input(`item`, VarChar, data.item).query("INSERT INTO listing.[default].items (item_name) VALUES (@item)",
-                function (err, results) {
+                function (err) {
                     connection.close();
                     if (err == null) {
                         return res.status(200).send(`Added item "${data.item}". Call with get request to view`);
